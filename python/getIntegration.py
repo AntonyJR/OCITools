@@ -31,4 +31,4 @@ for ocid in args.ocids :
     ii = integration_client.get_integration_instance(integration_instance_id=ocid).data
     print("{} {} {} {} {} [{}]".format(config["region"], ocid, ii.display_name, ii.lifecycle_state, ii.state_message, identity_client.get_compartment(ii.compartment_id).data.name))
   except oci.exceptions.ServiceError as se :
-    print("{} {} {}".format(config["region"], ocid, se.message))
+     print("Error {} {} {} {} {}".format(config["region"], ocid, se.status, se.code, se.message))

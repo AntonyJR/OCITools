@@ -29,7 +29,7 @@ for ocid in args.ocids :
   try :
     stop_responses.append((config["region"], ocid, integration_client.delete_integration_instance(integration_instance_id=ocid)))
   except oci.exceptions.ServiceError as se :
-    print("{} {} {}".format(config["region"], ocid, se.message))
+     print("Error {} {} {} {} {}".format(config["region"], ocid, se.status, se.code, se.message))
 
 print("Region OCID Status")
 for response in stop_responses :
