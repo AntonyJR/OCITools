@@ -5,7 +5,7 @@ identity_client = oci.identity.IdentityClient(config)
 regions = identity_client.list_region_subscriptions(config["tenancy"]).data
 compartments = identity_client.list_compartments(compartment_id=config["tenancy"], limit=1000, compartment_id_in_subtree=True, lifecycle_state="ACTIVE").data
 
-out_format = "{:14} {:105} {:20} {:15} {:20}"
+out_format = "{:14} {:105} {:40} {:15} {}"
 print(out_format.format("Region","OCID","Display_Name","Lifecycle_State","Compartment"))
 for region in regions :
   config["region"] = region.region_name
