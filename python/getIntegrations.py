@@ -1,3 +1,4 @@
+import re
 import oci
 
 config = oci.config.from_file()
@@ -6,8 +7,8 @@ regions = identity_client.list_region_subscriptions(config["tenancy"]).data
 compartments = identity_client.list_compartments(compartment_id=config["tenancy"], limit=1000, compartment_id_in_subtree=True, lifecycle_state="ACTIVE").data
 compartments.append(identity_client.get_compartment(compartment_id=config["tenancy"]).data)
 
-out_format = "{:14} {:105} {:40} {:15} {:34} {}"
-print(out_format.format("Region", "OCID", "Display_Name", "Lifecycle_State", "Compartment", "Creator"))
+out_format =            "{:14} {:40} {:8} {:34} {:34} {:20} {:105}"
+print(out_format.format("Region", "Display_Name", "State", "Compartment", "Creator", "Created", "OCID"))
 for region in regions :
   config["region"] = region.region_name
 
@@ -21,4 +22,5 @@ for region in regions :
     creator = integration.defined_tags["Oracle-Tags"]["CreatedBy"] \
               if hasattr(integration, "defined_tags") and "Oracle-Tags" in integration.defined_tags and "CreatedBy" in integration.defined_tags["Oracle-Tags"] \
               else "**Not_Known**"
-    print(out_format.format(config["region"], integration.identifier, '"'+integration.display_name+'"', integration.lifecycle_state, compartment_name, creator))
+    creator = re.sub(r'^.*?/', '*fed*/', creator)
+    print(out_format.format(config["region"], '"'+integration.display_name+'"', integration.lifecycle_state, compartment_name, creator, integration.time_created.strftime('%Y-%m-%dT%H:%M-%Z'), integration.identifier))
